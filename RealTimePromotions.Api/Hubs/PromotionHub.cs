@@ -7,7 +7,8 @@ namespace RealTimePromotions.Api.Hubs
     {
         public async Task Register(Promotion promotion)
         {
-
+            await Clients.Caller.SendAsync("RegisteredSuccessfully");
+            await Clients.Others.SendAsync("ReceivePromotion", promotion);
         }
     }
 }
