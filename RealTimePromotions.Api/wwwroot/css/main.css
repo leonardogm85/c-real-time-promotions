@@ -61,10 +61,6 @@ input[type=text] {
         color: gray;
     }
 
-input[type=button]:hover {
-    background-color: white;
-}
-
 input[type=button] {
     background-color: lightgray;
     color: black;
@@ -74,6 +70,10 @@ input[type=button] {
     width: 33%;
     font-size: 18px;
 }
+
+    input[type=button]:hover {
+        background-color: white;
+    }
 
 .button {
     border: 1px solid white;
