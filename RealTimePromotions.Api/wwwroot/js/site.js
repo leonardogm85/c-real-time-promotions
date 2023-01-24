@@ -1,29 +1,39 @@
-﻿const connection = new signalR.HubConnectionBuilder().withUrl('/PromotionsHub').build();
+﻿const connection = new signalR
+    .HubConnectionBuilder()
+    .withUrl('/PromotionsHub')
+    .build();
 
-connection.start().then(function () {
-    console.info('Connected!')
-}).catch(function (err) {
-    console.error(err);
+connection
+    .start()
+    .catch(console.error)
+    .then(() => console.info('Connected!'));
+
+connection.on('RegisteredSuccessfully', () => {
+    const message = document.getElementById('message');
+    message.innerHTML = 'Registered Successfully!';
+});
+
+connection.on('ReceivePromotion', (promotion) => {
+    console.info(promotion);
 });
 
 const register = document.getElementById('register');
 
-register?.addEventListener('click', function () {
-    const company = document.getElementById('company').value;
-    const description = document.getElementById('description').value;
-    const rule = document.getElementById('rule').value;
-    const address = document.getElementById('address').value;
+register?.addEventListener('click', () => {
+    const company = document.getElementById('company');
+    const description = document.getElementById('description');
+    const rule = document.getElementById('rule');
+    const address = document.getElementById('address');
 
     const promotion = {
-        company,
-        description,
-        rule,
-        address
+        company: company.value,
+        description: description.value,
+        rule: rule.value,
+        address: address.value
     };
 
-    connection.invoke('Register', promotion).then(function () {
-        console.info('Registered Successfully!');
-    }).catch(function (err) {
-        console.error(err);
-    });
+    connection
+        .invoke('Register', promotion)
+        .catch(console.error)
+        .then(() => console.info('Registered Successfully!'));
 });
