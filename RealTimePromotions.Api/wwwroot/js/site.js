@@ -3,10 +3,23 @@
     .withUrl('/PromotionsHub')
     .build();
 
-connection
-    .start()
-    .catch(console.error)
-    .then(() => console.info('Connected!'));
+const start = async () => {
+    await connection
+        .start()
+        .then(() => {
+            console.info('Connected!');
+        })
+        .catch((err) => {
+            console.error(err);
+            setTimeout(start, 5000);
+        });
+};
+
+start();
+
+connection.onclose(async () => {
+    await start();
+});
 
 connection.on('RegisteredSuccessfully', () => {
     const message = document.getElementById('message');
@@ -53,7 +66,7 @@ connection.on('ReceivePromotion', (promotion) => {
 
 const register = document.getElementById('register');
 
-register?.addEventListener('click', () => {
+register?.addEventListener('click', async () => {
     const company = document.getElementById('company');
     const description = document.getElementById('description');
     const rule = document.getElementById('rule');
@@ -66,8 +79,8 @@ register?.addEventListener('click', () => {
         address: address.value
     };
 
-    connection
+    await connection
         .invoke('Register', promotion)
-        .catch(console.error)
-        .then(() => console.info('Registered Successfully!'));
+        .then(() => console.info('Registered Successfully!'))
+        .catch(console.error);
 });
